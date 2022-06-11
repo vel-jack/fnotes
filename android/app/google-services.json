@@ -1,0 +1,54 @@
+{
+  "project_info": {
+    "project_number": "394081490289",
+    "project_id": "fnotes-1adee",
+    "storage_bucket": "fnotes-1adee.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:394081490289:android:a08854507a9158ca5712d0",
+        "android_client_info": {
+          "package_name": "com.emptybox.fnotes"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "394081490289-fuamkcsd435b2r8jfjvgq6d2fp6eo7gu.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.emptybox.fnotes",
+            "certificate_hash": "ffa682c40afb4db4b19a07f27215e9a365e851bf"
+          }
+        },
+        {
+          "client_id": "394081490289-5vfcgd7u8fkqph6iicnro7fjd20calmp.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBKTB4rIpbPq-j33Ivmb24jMP82gZgkosc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "394081490289-5vfcgd7u8fkqph6iicnro7fjd20calmp.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "394081490289-fgp3h142giqnhu62i45faif7dr3hc7bb.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.fnotes"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,10 +1,20 @@
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:fnotes/firebase_options.dart';
+import 'package:fnotes/pages/home.dart';
+import 'package:fnotes/pages/login.dart';
+import 'package:fnotes/utils/auth_service.dart';
 import 'package:fnotes/utils/constants.dart';
+import 'package:provider/provider.dart';
 
-void main() {
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
   SystemChrome.setSystemUIOverlayStyle(
       const SystemUiOverlayStyle(statusBarColor: primary));
+
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.android);
   runApp(const MyApp());
 }
 
@@ -13,37 +23,38 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-          scaffoldBackgroundColor: primary,
-          colorScheme:
-              Theme.of(context).colorScheme.copyWith(secondary: secondary),
-          appBarTheme: const AppBarTheme(backgroundColor: primary)),
-      home: const HomePage(),
+    return MultiProvider(
+      providers: [
+        Provider<AuthService>(
+            create: (context) => AuthService(FirebaseAuth.instance)),
+        StreamProvider<User?>(
+            create: (context) => context.read<AuthService>().authStateChanges,
+            initialData: FirebaseAuth.instance.currentUser)
+      ],
+      child: MaterialApp(
+        title: 'Flutter Demo',
+        debugShowCheckedModeBanner: false,
+        theme: ThemeData(
+            scaffoldBackgroundColor: primary,
+            colorScheme:
+                Theme.of(context).colorScheme.copyWith(secondary: secondary),
+            appBarTheme: const AppBarTheme(backgroundColor: primary)),
+        home: const AuthenticationWrapper(),
+      ),
     );
   }
 }
 
-class HomePage extends StatefulWidget {
-  const HomePage({Key? key}) : super(key: key);
+class AuthenticationWrapper extends StatelessWidget {
+  const AuthenticationWrapper({Key? key}) : super(key: key);
 
-  @override
-  State<HomePage> createState() => _HomePageState();
-}
-
-class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        elevation: 0,
-      ),
-      body: Container(),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {},
-        child: const Icon(Icons.add),
-      ),
-    );
+    final user = context.watch<User?>();
+
+    if (user != null) {
+      return const HomePage();
+    }
+    return const Login();
   }
 }
