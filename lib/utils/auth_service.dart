@@ -9,6 +9,8 @@ class AuthService {
 
   Stream<User?> get authStateChanges => _firebaseAuth.authStateChanges();
 
+  String get userId => _firebaseAuth.currentUser!.uid;
+
   Future<String> signInWithGoogle() async {
     try {
       final googleUser = await GoogleSignIn().signIn();
