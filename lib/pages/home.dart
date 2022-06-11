@@ -100,52 +100,62 @@ class _HomePageState extends State<HomePage> {
               itemBuilder: (BuildContext context, int index) {
                 return Padding(
                   padding:
-                      const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+                      const EdgeInsets.symmetric(vertical: 5, horizontal: 15),
                   child: Container(
                     padding: const EdgeInsets.all(10),
                     decoration: BoxDecoration(
                         color: tileColor,
                         borderRadius: BorderRadius.circular(10)),
                     child: InkWell(
-                      onTap: () {
-                        Navigator.of(context)
-                            .push(MaterialPageRoute(builder: (ctx) {
-                          return DetailedNote(
-                            note: snapshot.data!.docs[index],
-                          );
-                        }));
-                      },
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            children: const [
-                              Icon(
-                                Icons.play_arrow,
-                                color: Colors.white,
-                                size: 20,
-                              ),
-                              SizedBox(width: 5),
-                              Text(
-                                'Important',
-                                style: TextStyle(
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.bold),
-                              )
-                            ],
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.all(4.0),
-                            child: Text(
-                              '${snapshot.data!.docs[index]['hi']}',
-                              style: const TextStyle(color: Colors.white),
-                              overflow: TextOverflow.ellipsis,
+                        onTap: () {
+                          Navigator.of(context)
+                              .push(MaterialPageRoute(builder: (ctx) {
+                            return DetailedNote(
+                              note: snapshot.data!.docs[index],
+                            );
+                          }));
+                        },
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text.rich(
+                              TextSpan(children: [
+                                WidgetSpan(
+                                    child: Icon(
+                                  Icons.play_arrow,
+                                  color: tagColors[snapshot.data!.docs[index]
+                                      ['tag']],
+                                  size: 20,
+                                )),
+                                const TextSpan(text: ' '),
+                                TextSpan(
+                                  text: '${snapshot.data!.docs[index]['note']}',
+                                  style: const TextStyle(
+                                      color: Colors.white, fontSize: 16),
+                                )
+                              ]),
                               maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
                             ),
-                          )
-                        ],
-                      ),
-                    ),
+                            // SizedBox(
+                            //   width: double.infinity,
+                            //   child: Text(
+                            //     DateTime.fromMillisecondsSinceEpoch(
+                            //             snapshot.data!.docs[index]['time'])
+                            //         .toString(),
+                            //     style: const TextStyle(
+                            //         color: Colors.white, fontSize: 10),
+                            //     textAlign: TextAlign.end,
+                            //   ),
+                            // )
+                          ],
+                        )
+                        // '${snapshot.data!.docs[index]['hi']}',
+                        // style: const TextStyle(color: Colors.white),
+                        // overflow: TextOverflow.ellipsis,
+                        // maxLines: 2,
+
+                        ),
                   ),
                 );
               },

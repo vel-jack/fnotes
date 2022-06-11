@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:fnotes/utils/auth_service.dart';
+import 'package:fnotes/utils/constants.dart';
 import 'package:provider/provider.dart';
 
 class DetailedNote extends StatefulWidget {
@@ -13,7 +14,7 @@ class DetailedNote extends StatefulWidget {
 class _DetailedNoteState extends State<DetailedNote> {
   final TextEditingController _textEditingController = TextEditingController();
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-
+  int currentTag = 0;
   @override
   void dispose() {
     _textEditingController.dispose();
@@ -23,7 +24,8 @@ class _DetailedNoteState extends State<DetailedNote> {
   @override
   void initState() {
     if (widget.note != null) {
-      _textEditingController.text = widget.note!['hi'];
+      _textEditingController.text = widget.note!['note'];
+      currentTag = widget.note!['tag'];
     }
 
     super.initState();
@@ -34,44 +36,69 @@ class _DetailedNoteState extends State<DetailedNote> {
     return Scaffold(
       appBar: AppBar(
         actions: [
+          if (widget.note != null)
+            IconButton(
+              onPressed: () {
+                getNotePath()
+                    .doc(widget.note!.id)
+                    .delete()
+                    .then((value) => Navigator.pop(context));
+              },
+              icon: const Icon(Icons.delete),
+              tooltip: 'Delete Note',
+            ),
           IconButton(
               onPressed: () {
                 showDialog(
                     context: (context),
                     builder: (builder) {
                       return AlertDialog(
-                        title: const Text('Tag'),
+                        backgroundColor: tileColor,
+                        title: const Text(
+                          'Tag',
+                          style: TextStyle(color: Colors.white),
+                        ),
                         content: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [1, 2, 3, 4, 5]
-                              .map((e) => IconButton(
+                            mainAxisSize: MainAxisSize.min,
+                            children: List.generate(tagColors.length, (index) {
+                              return IconButton(
                                   onPressed: () {
+                                    setState(() => currentTag = index);
                                     Navigator.pop(context);
                                   },
-                                  icon: const Icon(Icons.fiber_manual_record)))
-                              .toList(),
-                        ),
+                                  icon: Icon(
+                                    Icons.fiber_manual_record,
+                                    color: tagColors[index],
+                                  ));
+                            })),
                       );
                     });
               },
-              icon: const Icon(Icons.fiber_manual_record)),
+              tooltip: 'Change TAG',
+              icon: Icon(Icons.fiber_manual_record,
+                  color: tagColors[currentTag])),
           IconButton(
               onPressed: () async {
                 if (_textEditingController.text.isEmpty) return;
                 if (widget.note == null) {
                   final ref = getNotePath().doc();
                   ref.set({
-                    'hi': _textEditingController.text,
+                    'note': _textEditingController.text,
                     'id': ref.id,
+                    'tag': currentTag,
+                    'time': DateTime.now().millisecondsSinceEpoch
                   });
                 } else {
                   getNotePath().doc(widget.note!.id).update({
-                    'hi': _textEditingController.text,
-                    'id': widget.note!.id
+                    'note': _textEditingController.text,
+                    'id': widget.note!.id,
+                    'tag': currentTag,
+                    'time': DateTime.now().millisecondsSinceEpoch
                   });
                 }
                 Navigator.pop(context);
               },
+              tooltip: 'Save',
               icon: const Icon(Icons.done)),
           const SizedBox(
             width: 10,
@@ -83,7 +110,8 @@ class _DetailedNoteState extends State<DetailedNote> {
         child: TextField(
           maxLines: 50,
           style: const TextStyle(color: Colors.white),
-          decoration: const InputDecoration(border: InputBorder.none),
+          decoration:
+              const InputDecoration(border: InputBorder.none, filled: true),
           controller: _textEditingController,
         ),
       ),

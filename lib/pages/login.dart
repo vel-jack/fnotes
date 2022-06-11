@@ -33,7 +33,9 @@ class _LoginState extends State<Login> {
                     onPressed: () async {
                       setState(() => isLoading = true);
                       await context.read<AuthService>().signInWithGoogle();
-                      setState(() => isLoading = false);
+                      if (mounted) {
+                        setState(() => isLoading = false);
+                      }
                     },
                     child: Container(
                       height: 45,

@@ -14,7 +14,9 @@ class AuthService {
   Future<String> signInWithGoogle() async {
     try {
       final googleUser = await GoogleSignIn().signIn();
+
       final googleAuth = await googleUser!.authentication;
+
       final credential = GoogleAuthProvider.credential(
           accessToken: googleAuth.accessToken, idToken: googleAuth.idToken);
       await _firebaseAuth.signInWithCredential(credential);
@@ -27,7 +29,8 @@ class AuthService {
 
   Future<String> signOut() async {
     try {
-      _firebaseAuth.signOut();
+      await _firebaseAuth.signOut();
+      await GoogleSignIn().signOut();
       return 'Signed out';
     } catch (e) {
       return 'Something went wrong';
