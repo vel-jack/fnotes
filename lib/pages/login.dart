@@ -32,7 +32,19 @@ class _LoginState extends State<Login> {
                   TextButton(
                     onPressed: () async {
                       setState(() => isLoading = true);
-                      await context.read<AuthService>().signInWithGoogle();
+                      try {
+                        await context.read<AuthService>().signInWithGoogle();
+                      } catch (e) {
+                        debugPrint(e.toString());
+                        ScaffoldMessenger.of(context)
+                            .showSnackBar(const SnackBar(
+                          content: Text('Something went wrong'),
+                          backgroundColor: Colors.red,
+                        ));
+                        if (mounted) {
+                          setState(() => isLoading = false);
+                        }
+                      }
                       if (mounted) {
                         setState(() => isLoading = false);
                       }
